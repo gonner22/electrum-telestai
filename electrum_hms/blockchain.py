@@ -21,18 +21,18 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 import os
-import sqlite3
+import struct
 import threading
 import time
+import sqlite3
 import traceback
-import algomodule
-from typing import Optional, Dict, Mapping, Sequence, TYPE_CHECKING, Union
+from typing import Optional, Dict, Mapping, Sequence, TYPE_CHECKING, Tuple, Union
 
 from . import util
 from .bitcoin import hash_encode
 from .crypto import sha256d
 from . import constants
-from .util import bfh
+from .util import bfh, with_lock
 from .logging import get_logger, Logger
 
 if TYPE_CHECKING:
@@ -40,13 +40,12 @@ if TYPE_CHECKING:
 
 _logger = get_logger(__name__)
 
-HEADER_SIZE = 80  # bytes
-V7_HEADER_SIZE = 112
-V8_HEADER_SIZE = 144
+HEADER_SIZE = 120  # bytes
+LEGACY_HEADER_SIZE = 80 # bytes
 
-MAX_TARGET = 0x00000FFFFF000000000000000000000000000000000000000000000000000000
-POW_TARGET_SPACING = int(1 * 60)  # PIVX: 1 minute
-DGW_PAST_BLOCKS = 24
+# see https://github.com/bitcoin/bitcoin/blob/feedb9c84e72e4fff489810a2bbeec09bcda5763/src/chainparams.cpp#L76
+MAX_TARGET = 0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+MERAKI_MAX_TARGET = 0x0000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffff
 
 class MissingHeader(Exception):
     pass
@@ -54,36 +53,53 @@ class MissingHeader(Exception):
 class InvalidHeader(Exception):
     pass
 
-def serialize_header(header_dict: dict) -> bytes:
-    s = (
-        int.to_bytes(header_dict['version'], length=4, byteorder="little", signed=False)
-        + bfh(header_dict['prev_block_hash'])[::-1]
-        + bfh(header_dict['merkle_root'])[::-1]
-        + int.to_bytes(int(header_dict['timestamp']), length=4, byteorder="little", signed=False)
-        + int.to_bytes(int(header_dict['bits']), length=4, byteorder="little", signed=False)
-        + int.to_bytes(int(header_dict['nonce']), length=4, byteorder="little", signed=False)
-    )
-   
-    if header_dict['version'] > 3:
-        s += bfh(header_dict['accumulator_checkpoint'])[::-1]
-    return s
+class NotEnoughHeaders(Exception):
+    pass
 
+def serialize_header(header_dict: dict) -> bytes:
+    if header_dict['timestamp'] < constants.net.MERAKI_ACTIVATION_TIME:
+        s = (
+            int.to_bytes(header_dict['version'], length=4, byteorder="little", signed=False)
+            + bfh(header_dict['prev_block_hash'])[::-1]
+            + bfh(header_dict['merkle_root'])[::-1]
+            + int.to_bytes(int(header_dict['timestamp']), length=4, byteorder="little", signed=False)
+            + int.to_bytes(int(header_dict['bits']), length=4, byteorder="little", signed=False)
+            + int.to_bytes(int(header_dict['nonce']), length=4, byteorder="little", signed=False)
+        )
+        s = s.ljust(HEADER_SIZE * 2, b'0')  # pad with zeros to post kawpow header size
+    else: 
+        s = (
+            int.to_bytes(header_dict['version'], length=4, byteorder="little", signed=False)
+            + bfh(header_dict['prev_block_hash'])[::-1]
+            + bfh(header_dict['merkle_root'])[::-1]
+            + int.to_bytes(int(header_dict['timestamp']), length=4, byteorder="little", signed=False)
+            + int.to_bytes(int(header_dict['bits']), length=4, byteorder="little", signed=False)
+            + int.to_bytes(int(header_dict['height']), length=4, byteorder="little", signed=False)
+            + int.to_bytes(int(header_dict['nonce']), length=8, byteorder="little", signed=False)
+            + bfh(header_dict['mix_hash'])[::-1]
+        )
+    return s
 
 def deserialize_header(s: bytes, height: int) -> dict:
     if not s:
         raise InvalidHeader('Invalid header: {}'.format(s))
-    if len(s) < HEADER_SIZE:
+
+    if len(s) not in (LEGACY_HEADER_SIZE, HEADER_SIZE):
         raise InvalidHeader('Invalid header length: {}'.format(len(s)))
+
     h = {}
     h['version'] = int.from_bytes(s[0:4], byteorder='little')
     h['prev_block_hash'] = hash_encode(s[4:36])
     h['merkle_root'] = hash_encode(s[36:68])
     h['timestamp'] = int.from_bytes(s[68:72], byteorder='little')
     h['bits'] = int.from_bytes(s[72:76], byteorder='little')
-    h['nonce'] = int.from_bytes(s[76:80], byteorder='little')
     
-    if h['version'] > 3:
-        h['accumulator_checkpoint'] = hash_encode(s[80:112])
+    if h['timestamp'] < constants.net.MERAKI_ACTIVATION_TIME:
+        h['nonce'] = int.from_bytes(s[76:80], byteorder='little')
+    else:
+        h['height'] = int.from_bytes(s[76:80], byteorder='little')
+        h['nonce'] = int.from_bytes(s[80:88], byteorder='little')
+        h['mix_hash'] = hash_encode(s[88:120])
 
     h['block_height'] = height
     return h
@@ -93,18 +109,36 @@ def hash_header(header: dict) -> str:
         return '0' * 64
     if header.get('prev_block_hash') is None:
         header['prev_block_hash'] = '00'*32
-    return hash_raw_header(serialize_header(header))
+        
+    header_bin = serialize_header(header)
+    if header['timestamp'] < constants.net.MERAKI_ACTIVATION_TIME:
+        return hash_raw_header_x16rv2(header_bin)
+    
+    return hash_raw_header_meraki(header_bin)
 
-def hash_raw_header(header: bytes) -> str:
+
+def hash_raw_header_x16rv2(header: bytes) -> str:
     assert isinstance(header, bytes)
-    if header[0] > 3:
-        return hash_encode(sha256d(header))
-    return hash_encode(PoWHash(header))
+    import x16rv2_hash
+    return hash_encode(x16rv2_hash.getPoWHash(header))
 
-def PoWHash(x):
-    x = util.to_bytes(x, 'utf8')
-    out = bytes(algomodule._quark_hash(x))
-    return out
+def hash_raw_header_meraki(header: bytes) -> str:
+    assert isinstance(header, bytes)
+    return hash_encode(meraki_hash(header))
+
+def revb(data):
+    b = bytearray(data)
+    b.reverse()
+    return bytes(b)
+
+def meraki_hash(header: bytes):
+    import meraki
+    header_hash = revb(sha256d(header[:80]))
+    nNonce64 = struct.unpack("<Q", header[80:88])[0]
+    mix_hash = revb(header[88:120])
+    result = revb(meraki.light_verify(header_hash, mix_hash, nNonce64))
+    return result
+
 pow_hash_header = hash_header
 
 

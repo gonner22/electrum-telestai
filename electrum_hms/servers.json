@@ -1,14 +1,8 @@
 {
-    "electrumx.hypur.xyz": {
+    "telestai.electrumx.multicoin.co": {
         "pruning": "-",
-        "s": "50002",
-        "t": "50001",
-        "version": "1.4.2"
-    },
-    "hemis.electrumx.multicoin.co": {
-        "pruning": "-",
-        "t": "50001",
-        "s": "50002",
-        "version": "1.4.2"
+        "t": "50005",
+        "s": "50006",
+        "version": "1.16.0"
     }
 }

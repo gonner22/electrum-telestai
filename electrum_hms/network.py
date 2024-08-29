@@ -314,7 +314,7 @@ class Network(Logger, NetworkRetryManager[ServerAddr]):
         self.daemon = daemon
 
         blockchain.read_blockchains(self.config)
-        # blockchain.init_headers_file_for_best_chain()
+        #blockchain.init_headers_file_for_best_chain()
         self.logger.info(f"blockchains {list(map(lambda b: b.forkpoint, blockchain.blockchains.values()))}")
         self._blockchain_preferred_block = self.config.BLOCKCHAIN_PREFERRED_BLOCK  # type: Dict[str, Any]
         if self._blockchain_preferred_block is None:

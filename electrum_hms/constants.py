@@ -41,8 +41,8 @@ def read_json(filename, default):
     return r
 
 
-GIT_REPO_URL = "https://github.com/ahmedbodi/electrum-hemis"
-GIT_REPO_ISSUES_URL = "https://github.com/ahmedbodi/electrum-hemis/issues"
+GIT_REPO_URL = "https://github.com/Telestai-Project/electrum-telestai"
+GIT_REPO_ISSUES_URL = "https://github.com/Telestai-Project/electrum-telestai/issues"
 BIP39_WALLET_FORMATS = read_json('bip39_wallet_formats.json', [])
 
 
@@ -67,6 +67,8 @@ class AbstractNet:
     XPRV_HEADERS_INV: Mapping[int, str]
     XPUB_HEADERS: Mapping[str, int]
     XPUB_HEADERS_INV: Mapping[int, str]
+    MERAKI_ACTIVATION_TIME: int
+    MERAKI_ACTIVATION_HEIGHT: int
 
     @classmethod
     def max_checkpoint(cls) -> int:
@@ -81,15 +83,17 @@ class BitcoinMainnet(AbstractNet):
     NET_NAME = "mainnet"
     TESTNET = False
     WIF_PREFIX = 0xd4
-    ADDRTYPE_P2PKH = 40
-    ADDRTYPE_P2SH = 13
-    SEGWIT_HRP = "hms"
+    ADDRTYPE_P2PKH = 66
+    ADDRTYPE_P2SH = 127
+    SEGWIT_HRP = "tst"
     BOLT11_HRP = SEGWIT_HRP
-    GENESIS = "000000956c582b70df5d2c9b4b83d05b5331978e40d639739bdc96c29e156ce7"
+    GENESIS = "00000056b9854abf830236d77443a8e3556f0244265e3eb12281a7bc43b7ff57"
     DEFAULT_PORTS = {'t': '50001', 's': '50002'}
     DEFAULT_SERVERS = read_json('servers.json', {})
     CHECKPOINTS = read_json('checkpoints.json', [])
     BLOCK_HEIGHT_FIRST_LIGHTNING_CHANNELS = 0
+    MERAKI_ACTIVATION_TIME = 1722566271
+    MERAKI_ACTIVATION_HEIGHT = 1
 
     XPRV_HEADERS = {
         'standard':    0xa0f3f1fb,  # xprv
@@ -116,11 +120,11 @@ class BitcoinTestnet(AbstractNet):
     NET_NAME = "testnet"
     TESTNET = True
     WIF_PREFIX = 0xef
-    ADDRTYPE_P2PKH = 111
-    ADDRTYPE_P2SH = 196
-    SEGWIT_HRP = "tb"
+    ADDRTYPE_P2PKH = 66
+    ADDRTYPE_P2SH = 127
+    SEGWIT_HRP = "tt"
     BOLT11_HRP = SEGWIT_HRP
-    GENESIS = "000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"
+    GENESIS = "00000056b9854abf830236d77443a8e3556f0244265e3eb12281a7bc43b7ff57"
     DEFAULT_PORTS = {'t': '51001', 's': '51002'}
     DEFAULT_SERVERS = read_json('servers_testnet.json', {})
     CHECKPOINTS = read_json('checkpoints_testnet.json', [])
