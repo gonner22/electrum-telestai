@@ -52,7 +52,7 @@ from . import x509
 from . import pem
 from . import version
 from . import blockchain
-from .blockchain import Blockchain
+from .blockchain import Blockchain, HEADER_SIZE, LEGACY_HEADER_SIZE, NotEnoughHeaders
 from . import bitcoin
 from . import constants
 from .i18n import _
@@ -636,30 +636,45 @@ class Interface(Logger):
     async def request_chunk(self, height: int, tip=None, *, can_return_early=False):
         if not is_non_negative_integer(height):
             raise Exception(f"{repr(height)} is not a block height")
-        index = height // 2016
-        if can_return_early and index in self._requested_chunks:
+
+        # For chunks within DGW checkpoints, we need to reset to start of 2016 chunks
+        if 0 <= height <= constants.net.max_checkpoint():
+            self.logger.info(f'interface request chunk, setting height from {height}')
+            height = (height // 2016) * 2016
+
+        ret = False
+        for mi, ma in self._requested_chunks:
+            if mi <= height < ma:
+                ret = True
+                break
+
+        if can_return_early and ret:
             return
         self.logger.info(f"requesting chunk from height {height}")
         size = 2016
         if tip is not None:
-            size = min(size, tip - index * 2016 + 1)
+            size = min(size, tip - height + 1)
             size = max(size, 0)
         try:
-            self._requested_chunks.add(index)
-            res = await self.session.send_request('blockchain.block.headers', [index * 2016, size])
+            self._requested_chunks.add((height, height + size))            
+            res = await self.session.send_request('blockchain.block.headers', [height, size])
         finally:
-            self._requested_chunks.discard(index)
+            self._requested_chunks.discard((height, height + size))        
         assert_dict_contains_field(res, field_name='count')
-        assert_dict_contains_field(res, field_name='headers')
+        assert_dict_contains_field(res, field_name='hex')
         assert_dict_contains_field(res, field_name='max')
         assert_non_negative_integer(res['count'])
         assert_non_negative_integer(res['max'])
+        assert_hex_str(res['hex'])
+        # First block is X16RV2 which has a different block format. Thats why we skip the check for that
+        if height + size >= constants.net.MERAKI_ACTIVATION_HEIGHT and len(res['hex']) != HEADER_SIZE * 2 * res['count'] and height > size + 1:
+            raise RequestCorrupted('inconsistent chunk hex and count')
         # we never request more than 2016 headers, but we enforce those fit in a single response
         if res['max'] < 2016:
             raise RequestCorrupted(f"server uses too low 'max' count for block.headers: {res['max']} < 2016")
         if res['count'] != size:
             raise RequestCorrupted(f"expected {size} headers but only got {res['count']}")
-        conn = self.blockchain.connect_chunk(index, res['headers'])
+        conn = await self.blockchain.connect_chunk(height, res['hex'])
         if not conn:
             return conn, 0
         return conn, res['count']
@@ -793,9 +808,14 @@ class Interface(Logger):
         if next_height is None:
             next_height = self.tip
         last = None
+        got_less_than_spacing = False
         while last is None or height <= next_height:
             prev_last, prev_height = last, height
             if next_height > height + 10:
+                if (not got_less_than_spacing and height >= 2016):
+                    # For DGW, ensure we start and get a chunk amount so we can properly match
+                    # the start and end block's targets
+                    height = (height // 2016) * 2016
                 could_connect, num_headers = await self.request_chunk(height, next_height)
                 if not could_connect:
                     if height <= constants.net.max_checkpoint():
@@ -804,7 +824,8 @@ class Interface(Logger):
                     continue
                 util.trigger_callback('blockchain_updated')
                 util.trigger_callback('network_updated')
-                height = (height // 2016 * 2016) + num_headers
+                got_less_than_spacing = num_headers < 2016
+                height = height + num_headers
                 assert height <= next_height+1, (height, self.tip)
                 last = 'catchup'
             else:
@@ -866,7 +887,14 @@ class Interface(Logger):
                 break
 
         mock = 'mock' in bad_header and bad_header['mock']['connect'](height)
-        real = not mock and self.blockchain.can_connect(bad_header, check_height=False)
+        real = False
+        try:
+            real = not mock and self.blockchain.can_connect(bad_header, check_height=False)
+        except NotEnoughHeaders:
+            if height <= constants.net.max_checkpoint():
+                self.logger.info('not enough headers; requesting chunk')
+                real, count = await self.request_chunk(height)
+
         if not real and not mock:
             raise Exception('unexpected bad header during binary: {}'.format(bad_header))
         _assert_header_does_not_check_against_any_chain(bad_header)
@@ -906,7 +934,14 @@ class Interface(Logger):
                 checkp = True
             header = await self.get_block_header(height, 'backward')
             chain = blockchain.check_header(header) if 'mock' not in header else header['mock']['check'](header)
-            can_connect = blockchain.can_connect(header) if 'mock' not in header else header['mock']['connect'](height)
+            can_connect = False
+            try:
+                can_connect = blockchain.can_connect(header) if 'mock' not in header else header['mock']['connect'](height)
+            except NotEnoughHeaders:
+                if height <= constants.net.max_checkpoint():
+                    self.logger.info('not enough headers; requesting chunk')
+                    can_connect, count = await self.request_chunk(height)
+                    assert count == 2016, 'Bad initial header request'
             if chain or can_connect:
                 return False
             if checkp:

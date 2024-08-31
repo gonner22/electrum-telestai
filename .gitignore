@@ -51,3 +51,6 @@ electrum_hemis/*.so.*
 electrum_hemis/*.dll
 electrum_hemis/*.dylib
 contrib/osx/*.dylib
+
+# DataDir
+electrum-hms_data/
