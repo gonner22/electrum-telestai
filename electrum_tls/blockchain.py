@@ -115,8 +115,8 @@ def hash_header(header: dict) -> str:
 
 def hash_raw_header_x16rv2(header: bytes) -> str:
     assert isinstance(header, bytes)
-    import x16rv2_hash
-    return hash_encode(x16rv2_hash.getPoWHash(header))
+    import algomodule
+    return hash_encode(algomodule._x16rv2_hash(header))
 
 def hash_raw_header_meraki(header: bytes) -> str:
     assert isinstance(header, bytes)
