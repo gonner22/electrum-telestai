@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright 2023-2024 Soren Stoutner <soren@debian.org>.
+
+  This file can be validated using `appstreamcli validate org.it4f.electrum-tls.metainfo.xml`.
+
+  Distributed under the MIT software license, see the accompanying file LICENCE or http://www.opensource.org/licenses/mit-license.php.
+-->
+
+<component type="desktop-application">
+  <id>org.it4f.electrum-tls</id>
+
+  <name>Electrum-TLS</name>
+  <summary>Telestai Wallet</summary>
+
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+
+  <description>
+    <p>
+      Electrum-TLS is a lightweight Telestai wallet focused on speed, with low resource usage and simplifying Telestai.
+      Startup times are instant because it operates in conjunction with high-performance servers that handle the most complicated parts of the Telestai system.
+    </p>
+  </description>
+
+  <url type="homepage">https://it4f.co.uk</url>
+  <developer id="org.it4f">
+      <name>IT4F LTD (Ahmed Bodiwala)</name>
+  </developer>
+
+  <launchable type="desktop-id">electrum-tls.desktop</launchable>
+
+  <content_rating type="oars-1.1" />
+</component>

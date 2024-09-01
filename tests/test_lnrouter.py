@@ -5,16 +5,16 @@ import shutil
 import asyncio
 from typing import Optional
 
-from electrum_hms import util
-from electrum_hms.util import bfh
-from electrum_hms.lnutil import ShortChannelID
-from electrum_hms.lnonion import (OnionHopsDataSingle, new_onion_packet,
+from electrum_tls import util
+from electrum_tls.util import bfh
+from electrum_tls.lnutil import ShortChannelID
+from electrum_tls.lnonion import (OnionHopsDataSingle, new_onion_packet,
                               process_onion_packet, _decode_onion_error, decode_onion_error,
                               OnionFailureCode, OnionPacket)
-from electrum_hms import bitcoin, lnrouter
-from electrum_hms.constants import BitcoinTestnet
-from electrum_hms.simple_config import SimpleConfig
-from electrum_hms.lnrouter import PathEdge, LiquidityHintMgr, DEFAULT_PENALTY_PROPORTIONAL_MILLIONTH, DEFAULT_PENALTY_BASE_MSAT, fee_for_edge_msat
+from electrum_tls import bitcoin, lnrouter
+from electrum_tls.constants import BitcoinTestnet
+from electrum_tls.simple_config import SimpleConfig
+from electrum_tls.lnrouter import PathEdge, LiquidityHintMgr, DEFAULT_PENALTY_PROPORTIONAL_MILLIONTH, DEFAULT_PENALTY_BASE_MSAT, fee_for_edge_msat
 
 from . import ElectrumTestCase
 from .test_bitcoin import needs_test_with_all_chacha20_implementations

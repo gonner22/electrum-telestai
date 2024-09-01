@@ -4,8 +4,8 @@ import json
 import os
 import sys
 
-from electrum_hms import bitcoin
-from electrum_hms.bitcoin import (public_key_to_p2pkh, address_from_private_key,
+from electrum_tls import bitcoin
+from electrum_tls.bitcoin import (public_key_to_p2pkh, address_from_private_key,
                               is_address, is_private_key,
                               var_int, _op_push, address_to_script, OnchainOutputType, address_to_payload,
                               deserialize_privkey, serialize_privkey, is_segwit_address,
@@ -15,18 +15,18 @@ from electrum_hms.bitcoin import (public_key_to_p2pkh, address_from_private_key,
                               opcodes, base_encode, base_decode, BitcoinException,
                               taproot_tweak_pubkey, taproot_tweak_seckey, taproot_output_script,
                               control_block_for_taproot_script_spend)
-from electrum_hms import bip32
-from electrum_hms import segwit_addr
-from electrum_hms.segwit_addr import DecodedBech32
-from electrum_hms.bip32 import (BIP32Node, convert_bip32_intpath_to_strpath,
+from electrum_tls import bip32
+from electrum_tls import segwit_addr
+from electrum_tls.segwit_addr import DecodedBech32
+from electrum_tls.bip32 import (BIP32Node, convert_bip32_intpath_to_strpath,
                             xpub_from_xprv, xpub_type, is_xprv, is_bip32_derivation,
                             is_xpub, convert_bip32_strpath_to_intpath,
                             normalize_bip32_derivation, is_all_public_derivation)
-from electrum_hms.crypto import sha256d, SUPPORTED_PW_HASH_VERSIONS
-from electrum_hms import ecc, crypto, constants, bitcoin
-from electrum_hms.util import bfh, InvalidPassword, randrange
-from electrum_hms.storage import WalletStorage
-from electrum_hms.keystore import xtype_from_derivation
+from electrum_tls.crypto import sha256d, SUPPORTED_PW_HASH_VERSIONS
+from electrum_tls import ecc, crypto, constants, bitcoin
+from electrum_tls.util import bfh, InvalidPassword, randrange
+from electrum_tls.storage import WalletStorage
+from electrum_tls.keystore import xtype_from_derivation
 
 from electrum import ecc_fast, crypto
 
@@ -1103,7 +1103,7 @@ class Test_keyImport(ElectrumTestCase):
            {'priv': 'L8g5V8kFFeg2WbecahRSdobARbHz2w2STH9S8ePHVSY4fmfYtzuL',
             'exported_privkey': 'p2wpkh:Kz6SuyPM5VktY5dr2d2YqdVgBA6LCWkiHqXJaC3BzxnMPSUjPJw2',
             'pub': '03e9f948421aaa89415dc5f281a61b60dde12aae3181b3a76cd2d849b164fc6d0b',
-            'address': 'hms1qqmpt7u5e9hfznljta5gnvhyvfd2kdd0rc7t09c',
+            'address': 'tls1qqmpt7u5e9hfznljta5gnvhyvfd2kdd0rc7t09c',
             'minikey': False,
             'txin_type': 'p2wpkh',
             'compressed': True,
@@ -1112,7 +1112,7 @@ class Test_keyImport(ElectrumTestCase):
            {'priv': 'p2wpkh:KyDWy5WbjLA58Zesh1o8m3pADGdJ3v33DKk4m7h8BD5zDK8H6P7p',
             'exported_privkey': 'p2wpkh:KyDWy5WbjLA58Zesh1o8m3pADGdJ3v33DKk4m7h8BD5zDK8H6P7p',
             'pub': '038c57657171c1f73e34d5b3971d05867d50221ad94980f7e87cbc2344425e6a1e',
-            'address': 'hms1qpakeeg4d9ydyjxd8paqrw4xy9htsg532mn6jdw',
+            'address': 'tls1qpakeeg4d9ydyjxd8paqrw4xy9htsg532mn6jdw',
             'minikey': False,
             'txin_type': 'p2wpkh',
             'compressed': True,

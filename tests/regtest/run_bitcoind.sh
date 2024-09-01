@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 export HOME=~
 set -eux pipefail
-mkdir -p ~/.hemis
-cat > ~/.hemis/hemis.conf <<EOF
+mkdir -p ~/.telestai
+cat > ~/.telestai/telestai.conf <<EOF
 regtest=1
 txindex=1
 printtoconsole=1
@@ -16,10 +16,10 @@ fallbackfee=0.0002
 rpcbind=0.0.0.0
 rpcport=18554
 EOF
-rm -rf ~/.hemis/regtest
-screen -S hemisd -X quit || true
-screen -S hemisd -m -d hemisd -regtest
+rm -rf ~/.telestai/regtest
+screen -S telestaid -X quit || true
+screen -S telestaid -m -d telestaid -regtest
 sleep 6
-hemis-cli createwallet test_wallet
-addr=$(hemis-cli getnewaddress)
-hemis-cli generatetoaddress 150 $addr > /dev/null
+telestai-cli createwallet test_wallet
+addr=$(telestai-cli getnewaddress)
+telestai-cli generatetoaddress 150 $addr > /dev/null

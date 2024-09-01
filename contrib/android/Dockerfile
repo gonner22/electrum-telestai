@@ -189,7 +189,7 @@ RUN cd /opt \
     && git fetch --all \
     # commit: from branch electrum-qt6 (note: careful with force-pushing! see #8162) \
     && git checkout "4403ecf445f10b5fbf7c74f4621bf2b922ad35b5^{commit}" \
-    # SETUPTOOLS_USE_DISTUTILS=stdlib needed to build buildozer for HMS
+    # SETUPTOOLS_USE_DISTUTILS=stdlib needed to build buildozer for TLS
     && SETUPTOOLS_USE_DISTUTILS=stdlib /opt/venv/bin/python3  -m pip install --no-build-isolation --no-dependencies -e . \
     && /opt/venv/bin/python3 -m pip install --no-build-isolation --no-dependencies -e .
 
