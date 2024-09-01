@@ -2,10 +2,10 @@ import shutil
 import tempfile
 import os
 
-from electrum_tls import constants, blockchain
-from electrum_tls.simple_config import SimpleConfig
-from electrum_tls.blockchain import Blockchain, deserialize_header, hash_header, InvalidHeader
-from electrum_tls.util import bfh, make_dir
+from electrum_hms import constants, blockchain
+from electrum_hms.simple_config import SimpleConfig
+from electrum_hms.blockchain import Blockchain, deserialize_header, hash_header, InvalidHeader
+from electrum_hms.util import bfh, make_dir
 
 from . import ElectrumTestCase
 

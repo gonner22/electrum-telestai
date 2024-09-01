@@ -5,11 +5,11 @@ import threading
 import tempfile
 import shutil
 
-import electrum_tls
-import electrum_tls.logging
-from electrum_tls import constants
-from electrum_tls import util
-from electrum_tls.logging import Logger
+import electrum_hms
+import electrum_hms.logging
+from electrum_hms import constants
+from electrum_hms import util
+from electrum_hms.logging import Logger
 
 # Set this locally to make the test suite run faster.
 # If set, unit tests that would normally test functions with multiple implementations,
@@ -18,9 +18,9 @@ from electrum_tls.logging import Logger
 FAST_TESTS = False
 
 
-electrum_tls.logging._configure_stderr_logging()
+electrum_hms.logging._configure_stderr_logging()
 
-electrum_tls.util.AS_LIB_USER_I_WANT_TO_MANAGE_MY_OWN_ASYNCIO_LOOP = True
+electrum_hms.util.AS_LIB_USER_I_WANT_TO_MANAGE_MY_OWN_ASYNCIO_LOOP = True
 
 
 class ElectrumTestCase(unittest.IsolatedAsyncioTestCase, Logger):

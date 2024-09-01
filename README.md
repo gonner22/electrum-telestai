@@ -1,20 +1,20 @@
-# Electrum-TLS - Lightweight Telestai client
+# Electrum-HMS - Lightweight Hemis client
 
 ```
 Licence: MIT Licence
-Author: Telestai Developers
+Author: Hemis Developers
 Language: Python (>= 3.8)
-Homepage: https://telestai.io/
+Homepage: https://hemis.tech/
 ```
 
-[![Build Status](https://api.cirrus-ci.com/github/Telestai/electrum-tls.svg?branch=master)](https://cirrus-ci.com/github/Telestai/electrum-tls)
+[![Build Status](https://api.cirrus-ci.com/github/Hemis/electrum-hms.svg?branch=master)](https://cirrus-ci.com/github/Hemis/electrum-hms)
 
 ## Getting started
 
-_(If you've come here looking to simply run Electrum-TLS,
-[you may download it here](https://www.telestai.io/telestai-electrum-wallet/).)_
+_(If you've come here looking to simply run Electrum-HMS,
+[you may download it here](https://www.hemis.tech/hemis-electrum-wallet/).)_
 
-Electrum-TLS itself is pure Python, and so are most of the required dependencies,
+Electrum-HMS itself is pure Python, and so are most of the required dependencies,
 but not everything. The following sections describe how to run from source, but here
 is a TL;DR:
 
@@ -58,22 +58,22 @@ If you would like hardware wallet support,
 ### Running from tar.gz
 
 If you downloaded the official package (tar.gz), you can run
-Electrum-TLS from its root directory without installing it on your
+Electrum-HMS from its root directory without installing it on your
 system; all the pure python dependencies are included in the 'packages'
 directory. To run Electrum from its root directory, just do:
 ```
-$ ./run_electrum_tls
+$ ./run_electrum_hms
 ```
 
-You can also install Electrum-TLS on your system, by running this command:
+You can also install Electrum-HMS on your system, by running this command:
 ```
 $ sudo apt-get install python3-setuptools python3-pip
 $ python3 -m pip install --user .
 ```
 
 This will download and install the Python dependencies used by
-Electrum-TLS instead of using the 'packages' directory.
-It will also place an executable named `electrum-tls` in `~/.local/bin`,
+Electrum-HMS instead of using the 'packages' directory.
+It will also place an executable named `electrum-hms` in `~/.local/bin`,
 so make sure that is on your `PATH` variable.
 
 
@@ -84,8 +84,8 @@ and [for macOS](contrib/osx/README_macos.md))_
 
 Check out the code from GitHub:
 ```
-$ git clone https://github.com/Telestai/electrum-tls.git
-$ cd electrum-tls
+$ git clone https://github.com/Hemis/electrum-hms.git
+$ cd electrum-hms
 $ git submodule update --init
 ```
 
@@ -100,9 +100,9 @@ $ sudo apt-get install python3-requests gettext qttools5-dev-tools
 $ ./contrib/pull_locale
 ```
 
-Finally, to start Electrum-TLS:
+Finally, to start Electrum-HMS:
 ```
-$ ./run_electrum_tls
+$ ./run_electrum_hms
 ```
 
 ### Run tests
@@ -134,7 +134,7 @@ Implementing new features, or improving/refactoring the codebase, is of course
 also welcome, but to avoid wasted effort, especially for larger changes,
 we encourage discussing these on the issue tracker or IRC first.
 
-Besides [GitHub](https://github.com/Telestai/electrum-tls),
-most communication about Electrum-TLS development happens on IRC, in the
-`#telestai` channel on Libera Chat. The easiest way to participate on IRC is
-with the web client, [web.libera.chat](https://web.libera.chat/#telestai).
+Besides [GitHub](https://github.com/Hemis/electrum-hms),
+most communication about Electrum-HMS development happens on IRC, in the
+`#hemis` channel on Libera Chat. The easiest way to participate on IRC is
+with the web client, [web.libera.chat](https://web.libera.chat/#hemis).

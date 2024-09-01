@@ -6,7 +6,7 @@ build/
 dist/
 *.egg/
 Electrum*.egg-info/
-electrum_telestai/locale/
+electrum_hemis/locale/
 .devlocaltmp/
 *_trial_temp
 packages
@@ -46,11 +46,11 @@ contrib/libusb/
 contrib/.venv_make_packages/
 
 # shared objects
-electrum_telestai/*.so
-electrum_telestai/*.so.*
-electrum_telestai/*.dll
-electrum_telestai/*.dylib
+electrum_hemis/*.so
+electrum_hemis/*.so.*
+electrum_hemis/*.dll
+electrum_hemis/*.dylib
 contrib/osx/*.dylib
 
 # DataDir
-electrum-tls_data/
+electrum-hms_data/

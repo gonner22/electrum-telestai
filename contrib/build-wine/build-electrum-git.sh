@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAME_ROOT=electrum-tls
+NAME_ROOT=electrum-hms
 
 export PYTHONDONTWRITEBYTECODE=1  # don't create __pycache__/ folders with .pyc files
 
@@ -10,7 +10,7 @@ set -e
 
 . "$CONTRIB"/build_tools_util.sh
 
-pushd $WINEPREFIX/drive_c/electrum-tls
+pushd $WINEPREFIX/drive_c/electrum-hms
 
 VERSION=4.5.4
 info "Last commit: $VERSION"
@@ -18,7 +18,7 @@ info "Last commit: $VERSION"
 # Load electrum-locale for this release
 git submodule update --init
 
-LOCALE="$WINEPREFIX/drive_c/electrum-tls/electrum_tls/locale/"
+LOCALE="$WINEPREFIX/drive_c/electrum-hms/electrum_hms/locale/"
 # we want the binary to have only compiled (.mo) locale files; not source (.po) files
 rm -rf "$LOCALE"
 "$CONTRIB/build_locale.sh" "$CONTRIB/deterministic-build/electrum-locale/locale/" "$LOCALE"
@@ -46,13 +46,13 @@ $WINE_PYTHON -m pip install --no-build-isolation --no-dependencies --no-warn-scr
     --no-binary :all: --only-binary cffi,cryptography,hidapi \
     --cache-dir "$WINE_PIP_CACHE_DIR" -r "$CONTRIB"/deterministic-build/requirements-hw.txt
 
-pushd $WINEPREFIX/drive_c/electrum-tls
+pushd $WINEPREFIX/drive_c/electrum-hms
 # see https://github.com/pypa/pip/issues/2195 -- pip makes a copy of the entire directory
-info "Pip installing Electrum-TLS. This might take a long time if the project folder is large."
+info "Pip installing Electrum-HMS. This might take a long time if the project folder is large."
 $WINE_PYTHON -m pip install --no-build-isolation --no-dependencies --no-warn-script-location .
 # pyinstaller needs to be able to "import electrum", for which we need libsecp256k1:
 # (or could try "pip install -e" instead)
-cp electrum_tls/libsecp256k1-*.dll "$WINEPREFIX/drive_c/python3/Lib/site-packages/electrum_tls/"
+cp electrum_hms/libsecp256k1-*.dll "$WINEPREFIX/drive_c/python3/Lib/site-packages/electrum_hms/"
 popd
 
 
@@ -69,10 +69,10 @@ popd
 
 info "building NSIS installer"
 # $VERSION could be passed to the electrum.nsi script, but this would require some rewriting in the script itself.
-makensis -DPRODUCT_VERSION=$VERSION electrum-tls.nsi
+makensis -DPRODUCT_VERSION=$VERSION electrum-hms.nsi
 
 cd dist
-mv electrum-tls-setup.exe $NAME_ROOT-$VERSION-setup.exe
+mv electrum-hms-setup.exe $NAME_ROOT-$VERSION-setup.exe
 cd ..
 
 info "Padding binaries to 8-byte boundaries, and fixing COFF image checksum in PE header"
@@ -117,4 +117,4 @@ EOF
     done
 )
 
-sha256sum dist/electrum-tls*.exe
+sha256sum dist/electrum-hms*.exe

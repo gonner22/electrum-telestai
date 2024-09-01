@@ -2,13 +2,13 @@ from typing import NamedTuple, Optional
 import json
 import os
 
-from electrum_tls import keystore
-from electrum_tls import mnemonic
-from electrum_tls import slip39
-from electrum_tls import old_mnemonic
-from electrum_tls.util import bfh
-from electrum_tls.mnemonic import is_new_seed, is_old_seed, calc_seed_type, is_matching_seed, can_seed_have_passphrase
-from electrum_tls.version import SEED_PREFIX_SW, SEED_PREFIX
+from electrum_hms import keystore
+from electrum_hms import mnemonic
+from electrum_hms import slip39
+from electrum_hms import old_mnemonic
+from electrum_hms.util import bfh
+from electrum_hms.mnemonic import is_new_seed, is_old_seed, calc_seed_type, is_matching_seed, can_seed_have_passphrase
+from electrum_hms.version import SEED_PREFIX_SW, SEED_PREFIX
 
 from . import ElectrumTestCase
 from .test_wallet_vertical import UNICODE_HORROR, UNICODE_HORROR_HEX

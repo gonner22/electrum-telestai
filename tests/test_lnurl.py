@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from electrum_tls import lnurl
+from electrum_hms import lnurl
 
 
 class TestLnurl(TestCase):

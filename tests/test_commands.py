@@ -2,13 +2,13 @@ import unittest
 from unittest import mock
 from decimal import Decimal
 
-from electrum_tls.commands import Commands, eval_bool
-from electrum_tls import storage, wallet
-from electrum_tls.wallet import restore_wallet_from_text, Abstract_Wallet
-from electrum_tls.address_synchronizer import TX_HEIGHT_UNCONFIRMED
-from electrum_tls.simple_config import SimpleConfig
-from electrum_tls.transaction import Transaction, TxOutput, tx_from_any
-from electrum_tls.util import UserFacingException, NotEnoughFunds
+from electrum_hms.commands import Commands, eval_bool
+from electrum_hms import storage, wallet
+from electrum_hms.wallet import restore_wallet_from_text, Abstract_Wallet
+from electrum_hms.address_synchronizer import TX_HEIGHT_UNCONFIRMED
+from electrum_hms.simple_config import SimpleConfig
+from electrum_hms.transaction import Transaction, TxOutput, tx_from_any
+from electrum_hms.util import UserFacingException, NotEnoughFunds
 
 from . import ElectrumTestCase
 from .test_wallet_vertical import WalletIntegrityHelper
@@ -33,18 +33,18 @@ class TestCommands(ElectrumTestCase):
         self.assertEqual(True, Commands._setconfig_normalize_value('show_console_tab', "True"))
 
     def test_setconfig_non_auth_list(self):
-        self.assertEqual(['file:///var/www/', 'https://telestai.io'],
-            Commands._setconfig_normalize_value('url_rewrite', "['file:///var/www/','https://telestai.io']"))
-        self.assertEqual(['file:///var/www/', 'https://telestai.io'],
-            Commands._setconfig_normalize_value('url_rewrite', '["file:///var/www/","https://telestai.io"]'))
+        self.assertEqual(['file:///var/www/', 'https://hemis.tech'],
+            Commands._setconfig_normalize_value('url_rewrite', "['file:///var/www/','https://hemis.tech']"))
+        self.assertEqual(['file:///var/www/', 'https://hemis.tech'],
+            Commands._setconfig_normalize_value('url_rewrite', '["file:///var/www/","https://hemis.tech"]'))
 
     def test_setconfig_auth(self):
         self.assertEqual("7777", Commands._setconfig_normalize_value('rpcuser', "7777"))
         self.assertEqual("7777", Commands._setconfig_normalize_value('rpcuser', '7777'))
         self.assertEqual("7777", Commands._setconfig_normalize_value('rpcpassword', '7777'))
         self.assertEqual("2asd", Commands._setconfig_normalize_value('rpcpassword', '2asd'))
-        self.assertEqual("['file:///var/www/','https://telestai.io']",
-            Commands._setconfig_normalize_value('rpcpassword', "['file:///var/www/','https://telestai.io']"))
+        self.assertEqual("['file:///var/www/','https://hemis.tech']",
+            Commands._setconfig_normalize_value('rpcpassword', "['file:///var/www/','https://hemis.tech']"))
 
     def test_eval_bool(self):
         self.assertFalse(eval_bool("False"))

@@ -101,7 +101,7 @@ fi
 set -x
 
 # create tarball
-tarball="Electrum-tls-$VERSION.tar.gz"
+tarball="Electrum-hms-$VERSION.tar.gz"
 if test -f "dist/$tarball"; then
     info "file exists: $tarball"
 else
@@ -109,7 +109,7 @@ else
 fi
 
 # create source-only tarball
-srctarball="Electrum-tls-sourceonly-$VERSION.tar.gz"
+srctarball="Electrum-hms-sourceonly-$VERSION.tar.gz"
 if test -f "dist/$srctarball"; then
     info "file exists: $srctarball"
 else
@@ -117,7 +117,7 @@ else
 fi
 
 # appimage
-appimage="electrum-tls-$REV-x86_64.AppImage"
+appimage="electrum-hms-$REV-x86_64.AppImage"
 if test -f "dist/$appimage"; then
     info "file exists: $appimage"
 else
@@ -126,9 +126,9 @@ fi
 
 
 # windows
-win1="electrum-tls-$REV.exe"
-win2="electrum-tls-$REV-portable.exe"
-win3="electrum-tls-$REV-setup.exe"
+win1="electrum-hms-$REV.exe"
+win2="electrum-hms-$REV-portable.exe"
+win3="electrum-hms-$REV-setup.exe"
 if test -f "dist/$win1"; then
     info "file exists: $win1"
 else
@@ -149,13 +149,13 @@ else
 fi
 
 # android
-apk1="ElectrumTLS-$APK_VERSION-armeabi-v7a-release.apk"
-apk2="ElectrumTLS-$APK_VERSION-arm64-v8a-release.apk"
-apk3="ElectrumTLS-$APK_VERSION-x86_64-release.apk"
+apk1="ElectrumHMS-$APK_VERSION-armeabi-v7a-release.apk"
+apk2="ElectrumHMS-$APK_VERSION-arm64-v8a-release.apk"
+apk3="ElectrumHMS-$APK_VERSION-x86_64-release.apk"
 for arch in armeabi-v7a arm64-v8a x86_64
 do
-    apk="ElectrumTLS-$APK_VERSION-$arch-release.apk"
-    apk_unsigned="ElectrumTLS-$APK_VERSION-$arch-release-unsigned.apk"
+    apk="ElectrumHMS-$APK_VERSION-$arch-release.apk"
+    apk_unsigned="ElectrumHMS-$APK_VERSION-$arch-release-unsigned.apk"
     if test -f "dist/$apk"; then
         info "file exists: $apk"
     else
@@ -171,7 +171,7 @@ done
 
 # the macos binary is built on a separate machine.
 # the file that needs to be copied over is the codesigned release binary (regardless of builder role)
-dmg="electrum-tls-$VERSION.dmg"
+dmg="electrum-hms-$VERSION.dmg"
 if ! test -f "dist/$dmg"; then
     if [ ! -z "$RELEASEMANAGER" ] ; then  # RM
         fail "dmg is missing, aborting. Please build and codesign the dmg on a mac and copy it over."
@@ -212,7 +212,7 @@ if [ -z "$RELEASEMANAGER" ] ; then
     cd "$PROJECT_ROOT/dist/releasemanager"
     # TODO check somehow that RM had finished uploading
     sftp -oBatchMode=no -b - "$SSHUSER@uploadserver" << !
-       cd electrum-tls-downloads-airlock
+       cd electrum-hms-downloads-airlock
        cd "$VERSION"
        mget *
        bye

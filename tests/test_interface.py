@@ -1,4 +1,4 @@
-from electrum_tls.interface import ServerAddr
+from electrum_hms.interface import ServerAddr
 
 from . import ElectrumTestCase
 
