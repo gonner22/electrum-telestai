@@ -63,6 +63,7 @@ requirements =
     libzbar,
     sqlite3,
     algomodule,
+    meraki,
 
 # (str) Presplash of the application
 presplash.filename = %(source.dir)s/electrum_tls/gui/icons/electrum_presplash.png
