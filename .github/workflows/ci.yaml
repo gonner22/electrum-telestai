@@ -1,6 +1,6 @@
 name: Build
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   windows:
@@ -104,18 +104,17 @@ jobs:
         with:
           # this might remove tools that are actually needed,
           # if set to "true" but frees about 6 GB
-          tool-cache: false
+          tool-cache: true
 
           # all of these default to true, but feel free to set to
           # "false" if necessary for your workflow
-          android: false
-          dotnet: false
-          haskell: false
-          docker-images: false
-          codeql-images: false
-          large-packages: false
-          swap-storage: false
-
+          android: true
+          dotnet: true
+          haskell: true
+          docker-images: true
+          codeql-images: true
+          large-packages: true
+          swap-storage: true
       - name: Builder image
         run: docker build -t electrum-hms-android-builder-img --file contrib/android/Dockerfile .
       - name: Compile Android apk
