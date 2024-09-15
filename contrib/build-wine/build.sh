@@ -31,13 +31,13 @@ fi
 info "building docker image."
 docker build \
     $DOCKER_BUILD_FLAGS \
-    -t electrum-hms-wine-builder-img \
+    -t electrum-tls-wine-builder-img \
     "$CONTRIB_WINE"
 
 # maybe do fresh clone
 if [ ! -z "$ELECBUILD_COMMIT" ] ; then
     info "ELECBUILD_COMMIT=$ELECBUILD_COMMIT. doing fresh clone and git checkout."
-    FRESH_CLONE="/tmp/electrum_build/windows/fresh_clone/electrum-hms"
+    FRESH_CLONE="/tmp/electrum_build/windows/fresh_clone/electrum-tls"
     rm -rf "$FRESH_CLONE" 2>/dev/null || ( info "we need sudo to rm prev FRESH_CLONE." && sudo rm -rf "$FRESH_CLONE" )
     umask 0022
     git clone "$PROJECT_ROOT" "$FRESH_CLONE"
@@ -57,11 +57,11 @@ if [ ! -z "$ELECBUILD_COMMIT" ] ; then  # fresh clone (reproducible build)
     fi
 fi
 docker run -it \
-    --name electrum-hms-wine-builder-cont \
-    -v "$PROJECT_ROOT_OR_FRESHCLONE_ROOT":/opt/wine64/drive_c/electrum-hms \
+    --name electrum-tls-wine-builder-cont \
+    -v "$PROJECT_ROOT_OR_FRESHCLONE_ROOT":/opt/wine64/drive_c/electrum-tls \
     --rm \
-    --workdir /opt/wine64/drive_c/electrum-hms/contrib/build-wine \
-    electrum-hms-wine-builder-img \
+    --workdir /opt/wine64/drive_c/electrum-tls/contrib/build-wine \
+    electrum-tls-wine-builder-img \
     ./make_win.sh
 
 # make sure resulting binary location is independent of fresh_clone

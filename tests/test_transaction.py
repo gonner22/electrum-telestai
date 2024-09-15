@@ -2,16 +2,16 @@ import json
 import os
 from typing import NamedTuple, Union
 
-from electrum_hms import transaction, bitcoin
-from electrum_hms.transaction import (convert_raw_tx_to_hex, tx_from_any, Transaction,
+from electrum_tls import transaction, bitcoin
+from electrum_tls.transaction import (convert_raw_tx_to_hex, tx_from_any, Transaction,
                                   PartialTransaction, TxOutpoint, PartialTxInput,
                                   PartialTxOutput, Sighash, match_script_against_template,
                                   SCRIPTPUBKEY_TEMPLATE_ANYSEGWIT, TxOutput)
-from electrum_hms.util import bfh
-from electrum_hms.bitcoin import (deserialize_privkey, opcodes,
+from electrum_tls.util import bfh
+from electrum_tls.bitcoin import (deserialize_privkey, opcodes,
                               construct_script, construct_witness)
-from electrum_hms.ecc import ECPrivkey
-from electrum_hms import descriptor
+from electrum_tls.ecc import ECPrivkey
+from electrum_tls import descriptor
 
 from .test_bitcoin import disable_ecdsa_r_value_grinding
 from . import ElectrumTestCase

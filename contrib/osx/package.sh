@@ -24,15 +24,15 @@ export PATH=$PATH:~/bin
 
 
 if [ -z "$1" ]; then
-    echo "Usage: $0 Electrum-HMS.app"
+    echo "Usage: $0 Electrum-TLS.app"
     exit -127
 fi
 
 mkdir -p ~/bin
 
 if ! which ${genisoimage} > /dev/null 2>&1; then
-    mkdir -p /tmp/electrum-hms-macos
-    cd /tmp/electrum-hms-macos
+    mkdir -p /tmp/electrum-tls-macos
+    cd /tmp/electrum-tls-macos
     info "Downloading cdrkit $cdrkit_version"
     wget -nc ${cdrkit_download_path}/${cdrkit_file_name}
     tar xvf ${cdrkit_file_name}
@@ -48,8 +48,8 @@ if ! which ${genisoimage} > /dev/null 2>&1; then
 fi
 
 if ! which dmg > /dev/null 2>&1; then
-    mkdir -p /tmp/electrum-hms-macos
-    cd /tmp/electrum-hms-macos
+    mkdir -p /tmp/electrum-tls-macos
+    cd /tmp/electrum-tls-macos
     info "Downloading libdmg"
     LD_PRELOAD= git clone ${libdmg_url}
     cd libdmg-hfsplus
@@ -67,9 +67,9 @@ test -f "$plist" || fail "Info.plist not found"
 VERSION=$(grep -1 ShortVersionString $plist | tail -1 | gawk 'match($0, /<string>(.*)<\/string>/, a) {print a[1]}')
 echo $VERSION
 
-rm -rf /tmp/electrum-hms-macos/image > /dev/null 2>&1
-mkdir /tmp/electrum-hms-macos/image/
-cp -r $1 /tmp/electrum-hms-macos/image/
+rm -rf /tmp/electrum-tls-macos/image > /dev/null 2>&1
+mkdir /tmp/electrum-tls-macos/image/
+cp -r $1 /tmp/electrum-tls-macos/image/
 
 build_dir=$(dirname "$1")
 test -n "$build_dir" -a -d "$build_dir" || exit
@@ -80,16 +80,16 @@ ${genisoimage} \
     -D \
     -l \
     -probe \
-    -V "Electrum-HMS" \
+    -V "Electrum-TLS" \
     -no-pad \
     -r \
     -dir-mode 0755 \
     -apple \
-    -o Electrum-HMS_uncompressed.dmg \
-    /tmp/electrum-hms-macos/image || fail "Unable to create uncompressed dmg"
+    -o Electrum-TLS_uncompressed.dmg \
+    /tmp/electrum-tls-macos/image || fail "Unable to create uncompressed dmg"
 
-dmg dmg Electrum-HMS_uncompressed.dmg electrum-hms-$VERSION.dmg || fail "Unable to create compressed dmg"
-rm Electrum-HMS_uncompressed.dmg
+dmg dmg Electrum-TLS_uncompressed.dmg electrum-tls-$VERSION.dmg || fail "Unable to create compressed dmg"
+rm Electrum-TLS_uncompressed.dmg
 
 echo "Done."
-sha256sum electrum-hms-$VERSION.dmg
+sha256sum electrum-tls-$VERSION.dmg

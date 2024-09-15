@@ -1,10 +1,10 @@
 [app]
 
 # (str) Title of your application
-title = Electrum-HMS
+title = Electrum-TLS
 
 # (str) Package name
-package.name = ElectrumHMS
+package.name = ElectrumTLS
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.it4f
@@ -21,11 +21,11 @@ source.exclude_exts = spec
 # (list) List of directory to exclude (let empty to not exclude anything)
 source.exclude_dirs = bin, build, dist, contrib, env,
     tests,
-    electrum_hms/www,
-    electrum_hms/scripts,
-    electrum_hms/utils,
-    electrum_hms/gui/qt,
-    electrum_hms/plugins/payserver,
+    electrum_tls/www,
+    electrum_tls/scripts,
+    electrum_tls/utils,
+    electrum_tls/gui/qt,
+    electrum_tls/plugins/payserver,
     packages/qdarkstyle,
     packages/qtpy,
     packages/bin,
@@ -41,7 +41,7 @@ source.exclude_patterns = Makefile,setup*,
 
 # (str) Application versioning (method 1)
 version.regex = APK_VERSION = '(.*)'
-version.filename = %(source.dir)s/electrum_hms/version.py
+version.filename = %(source.dir)s/electrum_tls/version.py
 
 # (str) Application versioning (method 2)
 #version = $("$CONTRIB"/print_electrum_version.py APK_VERSION)
@@ -66,12 +66,12 @@ requirements =
     meraki,
 
 # (str) Presplash of the application
-presplash.filename = %(source.dir)s/electrum_hms/gui/icons/electrum_presplash.png
+presplash.filename = %(source.dir)s/electrum_tls/gui/icons/electrum_presplash.png
 
 # (str) Icon of the application
-icon.filename = %(source.dir)s/electrum_hms/gui/icons/android_electrum_icon_legacy.png
-icon.adaptive_foreground.filename = %(source.dir)s/electrum_hms/gui/icons/android_electrum_icon_foreground.png
-icon.adaptive_background.filename = %(source.dir)s/electrum_hms/gui/icons/android_electrum_icon_background.png
+icon.filename = %(source.dir)s/electrum_tls/gui/icons/android_electrum_icon_legacy.png
+icon.adaptive_foreground.filename = %(source.dir)s/electrum_tls/gui/icons/android_electrum_icon_foreground.png
+icon.adaptive_background.filename = %(source.dir)s/electrum_tls/gui/icons/android_electrum_icon_background.png
 
 # (str) Supported orientation (one of landscape, portrait or all)
 orientation = portrait
@@ -137,12 +137,12 @@ android.accept_sdk_license = True
 #android.add_jars = foo.jar,bar.jar,path/to/more/*.jar
 #android.add_jars = lib/android/zbar.jar
 
-android.add_jars = .buildozer/android/platform/*/build/libs_collections/ElectrumHMS/jar/*.jar
+android.add_jars = .buildozer/android/platform/*/build/libs_collections/ElectrumTLS/jar/*.jar
 
 
 # (list) List of Java files to add to the android project (can be java or a
 # directory containing the files)
-android.add_src = electrum_hms/gui/qml/java_classes/
+android.add_src = electrum_tls/gui/qml/java_classes/
 
 android.gradle_dependencies =
     com.android.support:support-compat:28.0.0,
@@ -160,7 +160,7 @@ android.add_activities = org.electrum.qr.SimpleScannerActivity
 # 3) A directory, here 'legal_resources' must contain one or more directories,
 # each of a resource kind:  drawable, xml, etc...
 # android.add_resources = legal_resources
-android.add_resources = electrum_hms/gui/qml/android_res/layout:layout
+android.add_resources = electrum_tls/gui/qml/android_res/layout:layout
 
 # (str) python-for-android branch to use, if not master, useful to try
 # not yet merged features.

@@ -5,8 +5,8 @@ import tempfile
 import shutil
 from io import StringIO
 
-from electrum_hms.simple_config import SimpleConfig, read_user_config
-from electrum_hms import constants
+from electrum_tls.simple_config import SimpleConfig, read_user_config
+from electrum_tls import constants
 
 from . import ElectrumTestCase
 
@@ -22,7 +22,7 @@ class Test_SimpleConfig(ElectrumTestCase):
         # make sure "read_user_config" and "user_dir" return a temporary directory.
         self.electrum_dir = tempfile.mkdtemp()
         # Do the same for the user dir to avoid overwriting the real configuration
-        # for development machines with electrum-hms installed :)
+        # for development machines with electrum-tls installed :)
         self.user_dir = tempfile.mkdtemp()
 
         self.options = {"electrum_path": self.electrum_dir}
@@ -150,17 +150,17 @@ class Test_SimpleConfig(ElectrumTestCase):
 
     def test_configvars_get_default_value_complex_fn(self):
         config = SimpleConfig(self.options)
-        self.assertEqual("https://swaps.hemis.tech/api", config.SWAPSERVER_URL)
+        self.assertEqual("https://swaps.telestai.io/api", config.SWAPSERVER_URL)
 
         config.SWAPSERVER_URL = "http://localhost:9999"
         self.assertEqual("http://localhost:9999", config.SWAPSERVER_URL)
 
         config.SWAPSERVER_URL = None
-        self.assertEqual("https://swaps.hemis.tech/api", config.SWAPSERVER_URL)
+        self.assertEqual("https://swaps.telestai.io/api", config.SWAPSERVER_URL)
 
         constants.set_testnet()
         try:
-            self.assertEqual("https://testnet-swaps.hemis.tech/api", config.SWAPSERVER_URL)
+            self.assertEqual("https://testnet-swaps.telestai.io/api", config.SWAPSERVER_URL)
         finally:
             constants.set_mainnet()
 
