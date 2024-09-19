@@ -56,7 +56,7 @@ try:
     from Cryptodome.Cipher import ChaCha20_Poly1305 as CD_ChaCha20_Poly1305
     from Cryptodome.Cipher import ChaCha20 as CD_ChaCha20
     from Cryptodome.Cipher import AES as CD_AES
-except Exception:
+except Exception as e:
     pass
 else:
     HAS_CRYPTODOME = True
@@ -70,11 +70,11 @@ try:
         raise Exception()
     from cryptography import exceptions
     from cryptography.hazmat.primitives.ciphers import Cipher as CG_Cipher
-    from cryptography.hazmat.primitives.ciphers import algorittls as CG_algorittls
+    from cryptography.hazmat.primitives.ciphers import algorithms as CG_algorithms
     from cryptography.hazmat.primitives.ciphers import modes as CG_modes
     from cryptography.hazmat.backends import default_backend as CG_default_backend
     import cryptography.hazmat.primitives.ciphers.aead as CG_aead
-except Exception:
+except Exception as e:
     pass
 else:
     HAS_CRYPTOGRAPHY = True
@@ -138,7 +138,7 @@ def aes_encrypt_with_iv(key: bytes, iv: bytes, data: bytes) -> bytes:
     if HAS_CRYPTODOME:
         e = CD_AES.new(key, CD_AES.MODE_CBC, iv).encrypt(data)
     elif HAS_CRYPTOGRAPHY:
-        cipher = CG_Cipher(CG_algorittls.AES(key), CG_modes.CBC(iv), backend=CG_default_backend())
+        cipher = CG_Cipher(CG_algorithms.AES(key), CG_modes.CBC(iv), backend=CG_default_backend())
         encryptor = cipher.encryptor()
         e = encryptor.update(data) + encryptor.finalize()
     elif HAS_PYAES:
@@ -156,7 +156,7 @@ def aes_decrypt_with_iv(key: bytes, iv: bytes, data: bytes) -> bytes:
         cipher = CD_AES.new(key, CD_AES.MODE_CBC, iv)
         data = cipher.decrypt(data)
     elif HAS_CRYPTOGRAPHY:
-        cipher = CG_Cipher(CG_algorittls.AES(key), CG_modes.CBC(iv), backend=CG_default_backend())
+        cipher = CG_Cipher(CG_algorithms.AES(key), CG_modes.CBC(iv), backend=CG_default_backend())
         decryptor = cipher.decryptor()
         data = decryptor.update(data) + decryptor.finalize()
     elif HAS_PYAES:
@@ -419,7 +419,7 @@ def chacha20_encrypt(*, key: bytes, nonce: bytes, data: bytes) -> bytes:
         return cipher.encrypt(data)
     if HAS_CRYPTOGRAPHY:
         nonce = bytes(16 - len(nonce)) + nonce  # cryptography wants 16 byte nonces
-        algo = CG_algorittls.ChaCha20(key=key, nonce=nonce)
+        algo = CG_algorithms.ChaCha20(key=key, nonce=nonce)
         cipher = CG_Cipher(algo, mode=None, backend=CG_default_backend())
         encryptor = cipher.encryptor()
         return encryptor.update(data)
@@ -437,7 +437,7 @@ def chacha20_decrypt(*, key: bytes, nonce: bytes, data: bytes) -> bytes:
         return cipher.decrypt(data)
     if HAS_CRYPTOGRAPHY:
         nonce = bytes(16 - len(nonce)) + nonce  # cryptography wants 16 byte nonces
-        algo = CG_algorittls.ChaCha20(key=key, nonce=nonce)
+        algo = CG_algorithms.ChaCha20(key=key, nonce=nonce)
         cipher = CG_Cipher(algo, mode=None, backend=CG_default_backend())
         decryptor = cipher.decryptor()
         return decryptor.update(data)
