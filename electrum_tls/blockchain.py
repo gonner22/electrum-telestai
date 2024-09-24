@@ -115,8 +115,8 @@ def hash_header(header: dict) -> str:
 
 def hash_raw_header_x16rv2(header: bytes) -> str:
     assert isinstance(header, bytes)
-    import algomodule
-    return hash_encode(algomodule._x16rv2_hash(header))
+    import algomodule.x16rv2
+    return hash_encode(algomodule.x16rv2._x16rv2_hash(header))
 
 def hash_raw_header_meraki(header: bytes) -> str:
     assert isinstance(header, bytes)
@@ -128,11 +128,11 @@ def revb(data):
     return bytes(b)
 
 def meraki_hash(header: bytes):
-    import meraki
+    import algomodule.meraki
     header_hash = revb(sha256d(header[:80]))
     nNonce64 = struct.unpack("<Q", header[80:88])[0]
     mix_hash = revb(header[88:120])
-    result = revb(meraki.light_verify(header_hash, mix_hash, nNonce64))
+    result = revb(algomodule.meraki._meraki_hash(header_hash, mix_hash, nNonce64))
     return result
 
 pow_hash_header = hash_header
