@@ -62,8 +62,7 @@ requirements =
     pillow,
     libzbar,
     sqlite3,
-    algomodule,
-    meraki,
+    algomodule
 
 # (str) Presplash of the application
 presplash.filename = %(source.dir)s/electrum_tls/gui/icons/electrum_presplash.png
