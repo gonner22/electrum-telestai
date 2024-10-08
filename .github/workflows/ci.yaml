@@ -34,8 +34,6 @@ jobs:
       - name: Upload Release Builds
         uses: softprops/action-gh-release@v0.1.15
         with:
-          name: ${{ github.sha }}
-          tag_name: ${{ github.sha }}
           prerelease: false
           files: contrib/build-wine/dist/*.exe
 
@@ -71,8 +69,6 @@ jobs:
       - name: Upload Release Builds
         uses: softprops/action-gh-release@v0.1.15
         with:
-          name: ${{ github.sha }}
-          tag_name: ${{ github.sha }}
           prerelease: false
           files: dist/*.AppImage
 
@@ -103,8 +99,6 @@ jobs:
       - name: Upload Release Builds
         uses: softprops/action-gh-release@v0.1.15
         with:
-          name: ${{ github.sha }}
-          tag_name: ${{ github.sha }}
           prerelease: false
           files: dist/*.tar.gz
 
@@ -135,8 +129,6 @@ jobs:
       - name: Upload Release Builds
         uses: softprops/action-gh-release@v0.1.15
         with:
-          name: ${{ github.sha }}
-          tag_name: ${{ github.sha }}
           prerelease: false
           files: dist/*.tar.gz
 
@@ -190,8 +182,6 @@ jobs:
       - name: Upload Release Builds
         uses: softprops/action-gh-release@v0.1.15
         with:
-          name: ${{ github.sha }}
-          tag_name: ${{ github.sha }}
           prerelease: false
           files: dist/*.apk
 
@@ -244,8 +234,6 @@ jobs:
       - name: Upload Release Builds
         uses: softprops/action-gh-release@v0.1.15
         with:
-          name: ${{ github.sha }}
-          tag_name: ${{ github.sha }}
           prerelease: false
           files: dist/*.apk
 
@@ -299,8 +287,6 @@ jobs:
       - name: Upload Release Builds
         uses: softprops/action-gh-release@v0.1.15
         with:
-          name: ${{ github.sha }}
-          tag_name: ${{ github.sha }}
           prerelease: false
           files: dist/*.apk
 
@@ -337,8 +323,6 @@ jobs:
       - name: Upload Release Builds
         uses: softprops/action-gh-release@v0.1.15
         with:
-          name: ${{ github.sha }}
-          tag_name: ${{ github.sha }}
           prerelease: false
           files: dist/*.dmg
 
