@@ -847,7 +847,7 @@ def control_block_for_taproot_script_spend(
 def usermessage_magic(message: bytes) -> bytes:
     from .bitcoin import var_int
     length = var_int(len(message))
-    return b"\x18Telestai Signed Message:\n" + length + message
+    return b"\x19Telestai Signed Message:\n" + length + message
 
 def ecdsa_sign_usermessage(ec_privkey, message: Union[bytes, str], *, is_compressed: bool) -> bytes:
     message = to_bytes(message, 'utf8')
